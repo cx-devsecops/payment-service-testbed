@@ -1,0 +1,51 @@
+# Pipeline de construccion heredado del equipo de plataforma.
+#
+# Los jobs estan condicionados a la variable de repositorio ENABLE_DEMO_PIPELINE,
+# que no esta definida: el workflow no se ejecuta solo. Se conserva en el
+# repositorio como artefacto de configuracion a analizar.
+name: build
+
+on:
+  pull_request_target:
+    branches: [develop, main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: write-all
+
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  ARTIFACTORY_USER: payments-ci
+  ARTIFACTORY_PASSWORD: Art1factory-CI-2024
+
+jobs:
+  build:
+    if: ${{ vars.ENABLE_DEMO_PIPELINE == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pull request code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: true
+
+      - name: Announce change
+        run: |
+          echo "Building change: ${{ github.event.pull_request.title }}"
+          echo "Requested by: ${{ github.event.pull_request.user.login }}"
+
+      - name: Set up JDK
+        uses: actions/setup-java@master
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build and test
+        run: mvn -B verify
+
+      - name: Publish artifact
+        run: |
+          curl -u "$ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD" \
+            -T target/payment-service-testbed-1.0.0-SNAPSHOT.jar \
+            "https://artifactory.internal.example.com/libs-release-local/payments/"

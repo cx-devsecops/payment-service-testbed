@@ -1,0 +1,16 @@
+target/
+node_modules/
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+.vscode/
+.DS_Store
+.env
+.env.*
+*.log
+*.class
+*.jar
+*.war
+__pycache__/
