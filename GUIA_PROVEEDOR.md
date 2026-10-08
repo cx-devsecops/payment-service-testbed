@@ -51,4 +51,4 @@ Publicar automáticamente en el PR un comentario o Job Summary que muestre el es
 - Resultados del PR a `main`, inventario completo de hallazgos, decisión de la compuerta, SBOM descargable y dictamen publicado en GitHub.
 - Configuración aplicada, duración de cada análisis, limitaciones observadas y pasos necesarios para reproducir la integración.
 
-La presentación final debe recorrer el flujo en ese orden y permitir inspeccionar los resultados reales. La configuración de pipelines y compuertas es responsabilidad íntegra del proveedor; no se entrega una lista pública de hallazgos esperados ni código de inyección preparado por el cliente.
+La presentación final debe recorrer el flujo en ese orden y permitir inspeccionar los resultados reales. La configuración de pipelines y compuertas es responsabilidad íntegra del proveedor; no se entrega una lista pública de hallazgos esperados ni código de inyección preparado por el cliente. 
