@@ -25,8 +25,4 @@ public class SearchRepository {
                 + "WHERE status = '" + status + "' AND merchant_id = '" + merchant + "'";
         return jdbc.queryForList(sql);
     }
-
-    public void pingHost(String host) throws Exception {
-        String[] cmd = {"/bin/sh", "-c", "ping -c 1 " + host};
-        Process process = Runtime.getRuntime().exec(cmd);
 }
