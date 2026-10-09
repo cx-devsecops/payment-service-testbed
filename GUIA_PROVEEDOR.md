@@ -4,6 +4,8 @@
 
 Este repositorio es el punto de partida de una PoC de SAST, SCA y detección de secretos sobre una API REST de pagos. **El proveedor prepara, ejecuta y presenta el escenario completo de extremo a extremo.** El equipo cliente observa la demostración final y la califica con su checklist; no introduce código, configura herramientas ni opera los pipelines durante la prueba.
 
+# Checkmarx
+
 ## Alcance del análisis
 
 El análisis debe cubrir todo el repositorio, no solo el código Java:
