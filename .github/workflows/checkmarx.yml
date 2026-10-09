@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0  # Full history for differential analysis
 
       - name: Run Checkmarx One Scan
-        uses: checkmarx/ast-github-action@v2.3.45
+        uses: checkmarx/ast-github-action@v2.3.36
         with:
           cx_tenant: ${{ secrets.CX_TENANT }}
           cx_client_id: ${{ secrets.CX_CLIENT_ID }}
