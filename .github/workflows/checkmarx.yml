@@ -19,21 +19,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Full history for differential analysis
 
       - name: Checkmarx AST Github Action
         uses: Checkmarx/ast-github-action@2.3.45
         with:
-          project_name: cx-devsecops/payment-service-testbed
+          project_name: 'cx-devsecops/payment-service-testbed'
           cx_tenant: ${{ secrets.CX_TENANT_NAME }}
-          base_uri:  ${{ secrets.CX_BASE_URI }}
+          base_uri: ${{ secrets.CX_BASE_URI }}
           cx_client_id: ${{ secrets.CX_CLIENT_ID }}
           cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
           branch: ${{ github.ref }}
-          additional_params: '--threshold sscs-secret-detection-critical=1 sscs-secret-detection-high=1'
-          results_params: 'sarif, SBOM'
-          
+          scan_params: '--threshold sscs-secret-detection-critical=1 sscs-secret-detection-high=1 --report-format sarif --report-format sbom'
+
       # Export results for downstream analysis
       - name: Upload SARIF to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
