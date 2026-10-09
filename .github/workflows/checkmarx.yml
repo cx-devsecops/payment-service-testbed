@@ -25,15 +25,14 @@ jobs:
       - name: Checkmarx AST Github Action
         uses: Checkmarx/ast-github-action@2.3.45
         with:
-          cx_tenant: ${{ secrets.CX_TENANT }}
+          project_name: cx-devsecops/payment-service-testbed
+          cx_tenant: ${{ secrets.CX_TENANT_NAME }}
+          base_uri:  ${{ secrets.CX_BASE_URI }}
           cx_client_id: ${{ secrets.CX_CLIENT_ID }}
           cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
-          cx_base_uri: ${{ secrets.CX_BASE_URI }}
-          project_name: ${{ github.repository }}
           branch: ${{ github.ref }}
-          scan_params: "full"
-          additional_params: ""
-          results_params: "sarif, SBOM"
+          additional_params: '--threshold sscs-secret-detection-critical=1 sscs-secret-detection-high=1'
+          results_params: 'sarif, SBOM'
           
       # Export results for downstream analysis
       - name: Upload SARIF to GitHub Security tab
