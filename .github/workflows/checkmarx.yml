@@ -1,0 +1,50 @@
+name: SSecurity Scans
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  checkmarx-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for differential analysis
+
+      - name: Run Checkmarx One Scan
+        uses: checkmarx/ast-github-action@v2.3.45
+        with:
+          cx_tenant: ${{ secrets.CX_TENANT }}
+          cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+          cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
+          cx_base_uri: ${{ secrets.CX_BASE_URI }}
+          project_name: ${{ github.repository }}
+          branch: ${{ github.ref }}
+          scan_params: "full"
+          additional_params: ""
+          results_params: "sarif, SBOM"
+          
+      # Export results for downstream analysis
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "cx_result.sarif"
+          category: "checkmarx-scan-results"
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: cx_result_sbom.json
+          path: '.'
