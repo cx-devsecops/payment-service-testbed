@@ -9,7 +9,7 @@ public class PaymentApplication {
         SpringApplication.run(PaymentApplication.class, args);
     }
     
-    private static final String SAMPLE_JWT_2 = "eyJzdWciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+    //private static final String SAMPLE_JWT_2 = "eyJzdWciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 }
 //SQLi
 @PostMapping("/retry")
@@ -18,4 +18,3 @@ public class PaymentApplication {
        // ... execute query
        return ResponseEntity.ok("Payment retried");
    }
-
