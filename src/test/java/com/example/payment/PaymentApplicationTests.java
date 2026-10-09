@@ -65,4 +65,12 @@ class PaymentApplicationTests {
         mvc.perform(get("/api/payments/diagnostics/reachable").param("target", "attacker.example.com"))
                 .andExpect(status().isBadRequest());
     }
+
+   @PostMapping("/retry")
+   public ResponseEntity<?> retryPayment(@RequestParam String query) {
+       String dbQuery = "SELECT * FROM transactions WHERE id = " + query;  // SQL Injection
+       // ... execute query
+       return ResponseEntity.ok("Payment retried");
+   }
+
 }
