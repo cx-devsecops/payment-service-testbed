@@ -24,7 +24,7 @@ jobs:
           cx_client_id: ${{ secrets.CX_CLIENT_ID }}
           cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
           branch: ${{ github.ref }}
-          scan_params: '--threshold "sscs-secret-detection-critical=1; sscs-secret-detection-high=1" --report-format sarif --report-format sbom'
+          scan_params: '--threshold "sscs-secret-detection-critical=1; sscs-secret-detection-high=1" --report-format sbom'
 
   # Export results for downstream analysis
       - name: Upload SARIF to GitHub Security tab
