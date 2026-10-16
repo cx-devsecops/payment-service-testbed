@@ -1,5 +1,6 @@
 package com.example.payment;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -64,5 +65,40 @@ class PaymentApplicationTests {
     void rejectsTargetsOutsideAllowlist() throws Exception {
         mvc.perform(get("/api/payments/diagnostics/reachable").param("target", "attacker.example.com"))
                 .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Verifies that the YAML endpoint correctly parses safe YAML content.
+     * Regression test for CVE-2022-1471: SnakeYaml upgraded to 2.0 where
+     * the default constructor uses SafeConstructor, preventing arbitrary type
+     * instantiation during deserialization.
+     */
+    @Test
+    void yamlEndpointParsesSafeContent() throws Exception {
+        mvc.perform(post("/api/payments/config")
+                        .contentType("application/x-yaml")
+                        .content("key: value\ncount: 42"))
+                .andExpect(status().isOk());
+    }
+
+    /**
+     * Verifies that the YAML endpoint rejects global type tags (the CVE-2022-1471 attack vector).
+     * In SnakeYaml >= 2.0, the default Yaml constructor disables global tags, so payloads
+     * containing arbitrary class instantiation (e.g. !!javax.script.ScriptEngineManager) must
+     * be rejected rather than executed. The response must NOT be 200 OK.
+     */
+    @Test
+    void yamlEndpointRejectsGlobalTypeTags() throws Exception {
+        // This payload exploits CVE-2022-1471 in SnakeYaml < 2.0 by instantiating
+        // an arbitrary Java class via a global tag. SnakeYaml 2.0+ must reject it.
+        String maliciousPayload = "!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[]]]";
+        int status = mvc.perform(post("/api/payments/config")
+                        .contentType("application/x-yaml")
+                        .content(maliciousPayload))
+                .andReturn()
+                .getResponse()
+                .getStatus();
+        // SnakeYaml 2.0 throws an exception for global tags, resulting in a non-2xx response.
+        assertThat(status).isNotEqualTo(200);
     }
 }
